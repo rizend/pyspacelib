@@ -37,4 +37,4 @@ def getLanguages():
     options = c.recvuntil("</select>").strip()
     c.recvuntil("</html>")
     c.close()
-    return re.split("\s+", re.sub(r'<[^>]+>', " ", options))[1:-1]
+    return re.split(r"\s+", re.sub(r'<[^>]+>', " ", options))[1:-1]

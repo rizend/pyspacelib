@@ -3,15 +3,15 @@ import sys
 
 assert sys.version_info >= (2, 5)
 
-ver = sys.version_info[0]
+VER = sys.version_info[0]
 
-if ver == 2:
+if VER == 2:
     from urllib import urlencode
 else:
     from urllib.parse import urlencode
 
 
-class httpcon:
+class HttpCon:
     def __init__(self, target, host, port=80):
         self.txt = target + " to "+host+":"+str(port)
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -30,10 +30,10 @@ class httpcon:
     def recvline(self):
         return self.recvuntil("\n")
 
-    def recvuntil(self, str):
+    def recvuntil(self, sentinel):
         while str not in self.buf:
             self.fillBuf()
-        end = self.buf.index(str)+len(str)
+        end = self.buf.index(sentinel)+len(sentinel)
         ret = self.buf[0:end]
         self.buf = self.buf[end:]
         return ret
@@ -60,9 +60,7 @@ class httpcon:
 
     def getRet(self):
         statusLine = self.recvline().strip()
-        self.statusLine = statusLine
-        [ver, code] = statusLine.split(" ")[0:2]
-        return int(code)
+        return int(statusLine.split(" ")[1])
 
     def expect200(self):
         ret = self.getRet()
@@ -94,9 +92,9 @@ def parseURL(url):
     return [host, port, url]
 
 
-def verb(url, verb):
+def verb(url, v):
     [host, port, path] = parseURL(url)
-    return httpcon(verb.upper()+" "+url, host, port)
+    return HttpCon(v.upper()+" "+path, host, port)
 
 
 def GET(url):
@@ -107,9 +105,9 @@ def POST(url):
     return verb(url, "POST")
 
 
-def POSTret(url, dict):
+def POSTret(url, params):
     c = POST(url)
-    c.sendPostData(dict)
+    c.sendPostData(params)
     ret = c.getRet()
     c.close()
     return ret
@@ -122,8 +120,8 @@ def GETret(url):
     return ret
 
 
-def POST200(url, dict):
-    ret = POSTret(url, dict)
+def POST200(url, params):
+    ret = POSTret(url, params)
     if ret != 200:
         raise HTTPException(
             "POST to "+url+" did not return 200 (returned "+ret+")!")

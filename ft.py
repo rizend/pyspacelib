@@ -31,6 +31,7 @@ class ftclient:
         self.s = device.socket()
         self.device = device
         self.genbuffer()
+        self.transparent = transparent
 
     @property
     def width(self):
@@ -51,7 +52,6 @@ class ftclient:
         self.offset = len(b)
 
     def setLayer(self, layer):
-        oldLayer = self.layer
         self.layer = layer
         self.genbuffer()
 
