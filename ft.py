@@ -43,19 +43,19 @@ class ftclient:
 
     def genbuffer(self):
         b = "P6\n" + str(self.width) + " " + str(self.height) + "\n" + "255\n"
-        a = "\n0\n0\n" + self.layer + "\n"
+        a = "0\n0\n" + str(self.layer) + "\n"
         pixels = self.width * self.height
         buf = bytearray(len(b)+3*pixels+len(a))
         self.buf = buf
-        buf[0:len(b)] = b
-        buf[-len(a):] = a
+        buf[0:len(b)] = bytes(b, "ascii")
+        buf[-len(a):] = bytes(a, "ascii")
         self.offset = len(b)
 
     def setLayer(self, layer):
         self.layer = layer
         self.genbuffer()
 
-    def set(self, color, x, y):
+    def set(self, x, y, color):
         (r, g, b) = color
         if r == 0 and g == 0 and b == 0 and not self.transparent:
             b = 1
@@ -74,8 +74,3 @@ class ftclient:
 
     def show(self):
         self.s.sendall(self.buf)
-
-
-f = ftclient()
-f.set(1, 1, [255, 255, 255])
-f.show()
