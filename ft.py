@@ -16,8 +16,11 @@ class ftdevice:
 
     def socket(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect((self.host, self.port))
         return s
+
+    def connect(self):
+        self.connect((self.host, self.port))
+        self.connected = True
 
 
 ftdevice("Flaschen Taschen", "ft.noise")
@@ -32,6 +35,9 @@ class ftclient:
         self.device = device
         self.genbuffer()
         self.transparent = transparent
+
+    def connect(self):
+        self.s.connect()
 
     @property
     def width(self):
@@ -73,6 +79,8 @@ class ftclient:
         self.buf[start:start+3] = [r, g, b]
 
     def show(self):
+        if not self.s.connected:
+            self.s.connect()
         self.s.sendall(self.buf)
 
 
