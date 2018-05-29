@@ -49,7 +49,7 @@ class ftclient:
 
     def genbuffer(self):
         b = "P6\n" + str(self.width) + " " + str(self.height) + "\n" + "255\n"
-        a = "\n0\n0\n" + self.layer + "\n"
+        a = "\n0\n0\n" + str(self.layer) + "\n"
         pixels = self.width * self.height
         buf = bytearray(len(b)+3*pixels+len(a))
         self.buf = buf
