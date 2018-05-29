@@ -74,3 +74,8 @@ class ftclient:
 
     def show(self):
         self.s.sendall(self.buf)
+
+if __name__ == "__main__":
+    f = ftclient()
+    f.set(1, 1, [255, 255, 255])
+    f.show()
