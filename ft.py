@@ -28,10 +28,13 @@ ftdevice("Noise Square Table", "square.noise", 1337, 810, 1)
 class ftclient:
     def __init__(self, device=devices[0], layer=11, transparent=True):
         self.layer = layer
-        self.s = device.socket()
+        self.s = None
         self.device = device
         self.genbuffer()
         self.transparent = transparent
+
+    def get_socket(self):
+        self.s = self.device.socket()
 
     @property
     def width(self):
@@ -73,6 +76,8 @@ class ftclient:
         self.buf[start:start+3] = [r, g, b]
 
     def show(self):
+        if self.s is None:
+            self.get_socket()
         self.s.sendall(self.buf)
 
 if __name__ == "__main__":
