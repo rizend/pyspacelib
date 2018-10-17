@@ -1,8 +1,7 @@
 from httpish import GET200, POST200, GET
 import re
 
-BASE = "http://pegasus.noise:8080"
-
+BASE = "http://pegasus.noise"
 
 def mute():
     return GET200(BASE+"/mute/")

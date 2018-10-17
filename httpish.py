@@ -31,7 +31,7 @@ class HttpCon:
         return self.recvuntil("\n")
 
     def recvuntil(self, sentinel):
-        while str not in self.buf:
+        while sentinel not in self.buf:
             self.fillBuf()
         end = self.buf.index(sentinel)+len(sentinel)
         ret = self.buf[0:end]
